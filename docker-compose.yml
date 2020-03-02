@@ -2,16 +2,23 @@ version: '3.7'
 
 services:
 
-  web:
+  net:
     container_name: 'dotnetcore'
     image: 'mcr.microsoft.com/dotnet/core/sdk'
     command: /bin/bash
+    tty: true
+    volumes:
+      - .:/demo
+    depends_on:
+      - db
+    command: bash -c "dotnet tool install --global dotnet-ef && cd /demo && cat ./extendpath.sh >> ~/.bashrc && source ~/.bashrc && cd /demo/App && dotnet add package Microsoft.EntityFrameworkCore.Design && dotnet-ef database update && tail -f /dev/null"
 
-  postgres:
+  db:
     container_name: 'postgres'
     image: postgres
     environment:
       # change this for a "real" app!
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data

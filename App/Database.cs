@@ -9,7 +9,7 @@ namespace App{
 		public DbSet<OrderItem> OrderItems{get;set;}
 		public DbSet<Order> Orders {get;set;}
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
-			optionsBuilder.UseNpgsql("Host=172.17.0.1;Database=dotnet;Username=postgres;Password=root");
+			optionsBuilder.UseNpgsql("Host=db;Database=dotnet;Username=postgres;Password=password");
 		}
 
 		public class Order{
