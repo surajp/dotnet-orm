@@ -1,0 +1,15 @@
+:host{
+	display: block;
+	padding: 10px;
+	background: blue;
+}
+
+app-first-comp{
+	border: 2px solid black;
+	border-radius: 5px;
+}
+
+app-second-comp{
+	border: 2px solid black;
+	border-radius: 5px;
+}

@@ -5,13 +5,13 @@ services:
   web:
     container_name: "ng_dev"
     build:
-      context: .
+      context: ./ngapp-build
       dockerfile: ng-dockerfile
     ports:
-      - "8000:4200"
+      - "8080:4200"
     volumes:
       - ./ngapp:/ng-app
-    command: sh -c "cd /ng-app && npm i --save ignore-warnings && ng update && ng serve --watch"
+    command: sh -c "cd /ng-app && npm i --save ignore-warnings && ng update && ng serve --watch --host 0.0.0.0"
     depends_on:
       - api
 
@@ -24,7 +24,7 @@ services:
       - .:/demo
     depends_on:
       - db
-    command: bash -c "if [ ! -d \"/root/.dotnet/tools\" ];then dotnet tool install --global dotnet-ef && cd /demo && cat ./extendpath.sh >> ~/.bashrc && source ~/.bashrc;fi && cd /demo/App && dotnet add package Microsoft.EntityFrameworkCore.Design && dotnet-ef database update && tail -f /dev/null"
+    command: bash -c "if [ ! -d \"/root/.dotnet/tools\" ];then dotnet tool install --global dotnet-ef && cd /demo && cat ./extendpath.sh >> ~/.bashrc;fi && source ~/.bashrc && cd /demo/App && dotnet add package Microsoft.EntityFrameworkCore.Design && dotnet-ef database update && tail -f /dev/null"
 
   db:
     container_name: 'postgres'

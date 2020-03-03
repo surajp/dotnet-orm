@@ -2,4 +2,5 @@
 
 # We label our stage as ‘builder’
 FROM node:13-alpine as builder
+EXPOSE 4200
 RUN npm i -g @angular/cli
