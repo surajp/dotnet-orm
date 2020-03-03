@@ -2,26 +2,40 @@ version: '3.7'
 
 services:
 
-  net:
+  web:
+    container_name: "ng_dev"
+    build:
+      context: .
+      dockerfile: ng-dockerfile
+    ports:
+      - "8000:4200"
+    volumes:
+      - ./ngapp:/ng-app
+    command: sh -c "cd /ng-app && npm i --save ignore-warnings && ng update && ng serve --watch"
+    depends_on:
+      - api
+
+
+  api:
     container_name: 'dotnetcore'
     image: 'mcr.microsoft.com/dotnet/core/sdk'
-    command: /bin/bash
     tty: true
     volumes:
       - .:/demo
     depends_on:
       - db
-    command: bash -c "dotnet tool install --global dotnet-ef && cd /demo && cat ./extendpath.sh >> ~/.bashrc && source ~/.bashrc && cd /demo/App && dotnet add package Microsoft.EntityFrameworkCore.Design && dotnet-ef database update && tail -f /dev/null"
+    command: bash -c "if [ ! -d \"/root/.dotnet/tools\" ];then dotnet tool install --global dotnet-ef && cd /demo && cat ./extendpath.sh >> ~/.bashrc && source ~/.bashrc;fi && cd /demo/App && dotnet add package Microsoft.EntityFrameworkCore.Design && dotnet-ef database update && tail -f /dev/null"
 
   db:
     container_name: 'postgres'
-    image: postgres
+    image: postgres:12-alpine
     environment:
       # change this for a "real" app!
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      PGDATA: /pgdata
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/pgdata
 
 volumes:
   postgres_data:
